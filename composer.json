@@ -1,7 +1,7 @@
 {
   "name": "stateforge/scenario-symfony-ai",
   "description": "Symfony adapter for Stateforge Scenario AI - Implementation to generate scenario classes with AI.",
-  "type": "library",
+  "type": "symfony-bundle",
   "keywords": [
     "testing",
     "phpunit",
@@ -55,6 +55,13 @@
     "tomasvotruba/type-coverage": "^2.2"
   },
   "extra": {
+    "symfony": {
+      "bundles": {
+        "Stateforge\\Scenario\\Symfony\\ScenarioAiBundle": [
+          "all"
+        ]
+      }
+    },
     "branch-alias": {
       "dev-main": "1.0-dev"
     }
