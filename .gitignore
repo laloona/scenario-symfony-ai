@@ -1,0 +1,18 @@
+# PhpStorm
+/.idea
+
+# Composer
+/vendor
+
+# PHP-CS-Fixer
+/.php-cs-fixer.cache
+
+# PHPUnit
+/.phpunit.cache
+.phpunit.result.cache
+
+# PHPStan
+/var
+
+# Scanerio
+.scenario.cache

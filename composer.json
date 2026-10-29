@@ -1,0 +1,69 @@
+{
+  "name": "stateforge/scenario-symfony-ai",
+  "description": "Symfony adapter for Stateforge Scenario AI - Implementation to generate scenario classes with AI.",
+  "type": "symfony-bundle",
+  "keywords": [
+    "testing",
+    "phpunit",
+    "fixtures",
+    "scenario",
+    "state",
+    "test-data",
+    "symfony",
+    "ai"
+  ],
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Christina Koenig",
+      "email": "christina.koenig@looriva.de",
+      "role": "lead"
+    }
+  ],
+  "homepage": "https://github.com/laloona/scenario-symfony-ai",
+  "support": {
+    "issues": "https://github.com/laloona/scenario-symfony-ai/issues",
+    "source": "https://github.com/laloona/scenario-symfony-ai"
+  },
+  "require": {
+    "php": ">=8.2",
+    "stateforge/scenario-symfony": "~1.2-dev",
+    "stateforge/scenario-ai": "~1.0-dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "Stateforge\\Scenario\\SymfonyAi\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Stateforge\\Scenario\\SymfonyAi\\Tests\\Unit\\": "tests/unit/",
+      "Stateforge\\Scenario\\SymfonyAi\\Tests\\Files\\": "tests/files/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.60",
+    "phpstan/phpstan": "^2.1",
+    "phpstan/phpstan-strict-rules": "^2.0",
+    "phpunit/phpunit": "^11.5.50 || ^12.5.22 || ^13.1.6",
+    "tomasvotruba/type-coverage": "^2.2"
+  },
+  "extra": {
+    "symfony": {
+      "bundles": {
+        "Stateforge\\Scenario\\Symfony\\ScenarioAiBundle": [
+          "all"
+        ]
+      }
+    },
+    "branch-alias": {
+      "dev-main": "1.0-dev"
+    }
+  }
+}

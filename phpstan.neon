@@ -1,0 +1,24 @@
+parameters:
+    level: 10
+
+    paths:
+        - src
+        - tests
+
+    tmpDir: var/phpstan
+
+    treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: true
+    checkTooWideReturnTypesInProtectedAndPublicMethods: true
+    reportAlwaysTrueInLastCondition: true
+    reportPossiblyNonexistentConstantArrayOffset: true
+
+    type_coverage:
+        return: 100
+        param: 100
+        property: 100
+        constant: 100
+
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/tomasvotruba/type-coverage/config/extension.neon
