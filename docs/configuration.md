@@ -9,7 +9,7 @@ The configuration defines how Scenario Symfony AI uses project data and which AI
 
 Scenario AI uses two configuration files:
 
-- `scenario.xml` – Defines the Scenario framework configuration, including suites, directories, and extensions. (see [stateforge/scenario-core](https://github.com/laloona/scenario-core))
+- `scenario.xml` – Defines the Scenario framework configuration, including suites, directories, and extensions. (see [stateforge/scenario-symfony](https://github.com/laloona/scenario-symfony))
 - `scenario-ai.xml` – Defines the AI adapter and AI-specific settings.
 
 Generate the `scenario-ai.xml` configuration file:
