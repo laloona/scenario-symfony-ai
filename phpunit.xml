@@ -28,7 +28,6 @@
         <exclude>
             <directory>tests</directory>
             <directory>vendor</directory>
-            <file>src/ScenarioSymfonyAiBundle.php</file>
         </exclude>
     </source>
 </phpunit>
