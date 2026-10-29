@@ -9,7 +9,7 @@
 
 ---
 
-# Stateforge Scenario AI
+# Stateforge Scenario Symfony AI
 
 **Generate Scenarios and Parameter Types using artificial intelligence.**
 
