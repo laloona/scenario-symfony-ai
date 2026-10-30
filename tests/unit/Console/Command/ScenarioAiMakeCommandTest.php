@@ -52,7 +52,6 @@ use const PHP_EOL;
 
 #[CoversClass(ScenarioAiMakeCommand::class)]
 #[UsesClass(Context::class)]
-#[UsesClass(CliConversation::class)]
 #[Group('command')]
 #[Small]
 final class ScenarioAiMakeCommandTest extends TestCase
