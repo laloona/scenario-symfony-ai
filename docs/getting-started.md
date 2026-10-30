@@ -74,4 +74,4 @@ If additional information is required, the AI may ask follow-up questions or req
 - [Configuration](configuration.md)
 - [Interactive Conversation](conversation.md)
 - [Code Generation Process](generation.md)
-- [AI Providers](providers.md)****
+- [AI Providers](providers.md)
