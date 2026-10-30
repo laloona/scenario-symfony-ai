@@ -36,7 +36,7 @@ final class ScenarioAiMakeCommand extends ScenarioCommand
     {
         $this
             ->setName('scenario:ai:make')
-            ->setDescription('Make a scenario - should only be used for dev/test')
+            ->setDescription('Make a scenario or parameter type with AI - should only be used for dev/test')
         ;
     }
 

@@ -15,7 +15,7 @@ Scenario AI uses two configuration files:
 Generate the `scenario-ai.xml` configuration file:
 
 ```bash
-php vendor/bin/scenario ai-config
+php bin/console scenario:ai:config
 ```
 This command creates the Scenario Symfony AI configuration file in the project root directory.
 Edit the generated file to configure your preferred AI provider and project-specific settings.

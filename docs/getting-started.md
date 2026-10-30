@@ -33,6 +33,7 @@ For example:
     xsi:noNamespaceSchemaLocation="xsd/scenario-ai.xsd"
     maxQuestions="3"
     projectDoc="mydocs"
+    allowProjectInformation="true"
 >
     <adapter type="openai">
         <var name="apiKey">YOUR_OPENAI_API_KEY</var>
@@ -49,7 +50,7 @@ Replace `YOUR_OPENAI_API_KEY` with your own API key.
 Start the interactive AI code generator:
 
 ```bash
-php vendor/bin/scenario ai-make
+php bin/console scenario:ai:make
 ```
 
 Scenario Symfony AI displays an introduction and asks you to describe the Scenario or Parameter Type you want to generate.
@@ -62,7 +63,7 @@ Please describe the scenario or parameter type.
 
 Enter your requirements in natural language.
 
-Scenario AI analyzes the request and attempts to generate a corresponding PHP implementation.
+Scenario Symfony AI analyzes the request and attempts to generate a corresponding PHP implementation.
 
 If additional information is required, the AI may ask follow-up questions or request access to existing application classes.
 
