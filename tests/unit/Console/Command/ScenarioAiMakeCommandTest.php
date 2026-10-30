@@ -28,12 +28,12 @@ use Stateforge\Scenario\Ai\Runtime\Adapter\GenerationType;
 use Stateforge\Scenario\Ai\Runtime\AdapterConfiguration;
 use Stateforge\Scenario\Ai\Runtime\Ai;
 use Stateforge\Scenario\Ai\Runtime\Configuration;
+use Stateforge\Scenario\Ai\Runtime\Instruction\ClassInstruction;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration as CoreConfiguration;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Stateforge\Scenario\SymfonyAi\Console\Command\ScenarioAiMakeCommand;
 use Stateforge\Scenario\SymfonyAi\Runtime\Context;
-use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\BaseClassInstruction;
 use Stateforge\Scenario\SymfonyAi\Tests\Files\SharedProjectClass;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -52,7 +52,7 @@ use const PHP_EOL;
 
 #[CoversClass(ScenarioAiMakeCommand::class)]
 #[UsesClass(Context::class)]
-#[UsesClass(BaseClassInstruction::class)]
+#[UsesClass(ClassInstruction::class)]
 #[Group('command')]
 #[Small]
 final class ScenarioAiMakeCommandTest extends TestCase
@@ -102,7 +102,7 @@ final class ScenarioAiMakeCommandTest extends TestCase
         $command = $this->command();
 
         self::assertSame('scenario:ai:make', $command->getName());
-        self::assertSame('Make a scenario - should only be used for dev/test', $command->getDescription());
+        self::assertSame('Make a scenario or parameter type with AI - should only be used for dev/test', $command->getDescription());
     }
 
     #[DataProvider('generationProvider')]

@@ -16,6 +16,7 @@ use Stateforge\Scenario\Ai\Contract\AiContext;
 use Stateforge\Scenario\Ai\Runtime\Adapter\AiRequest;
 use Stateforge\Scenario\Ai\Runtime\Ai;
 use Stateforge\Scenario\Ai\Runtime\Instruction\BlueprintInstruction;
+use Stateforge\Scenario\Ai\Runtime\Instruction\ClassInstruction;
 use Stateforge\Scenario\Ai\Runtime\Instruction\GeneralInstructions;
 use Stateforge\Scenario\Ai\Runtime\Instruction\Instruction;
 use Stateforge\Scenario\Ai\Runtime\Instruction\Instructions;
@@ -29,7 +30,6 @@ use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
 use Stateforge\Scenario\Symfony\Scenario;
-use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\BaseClassInstruction;
 use const DIRECTORY_SEPARATOR;
 
 final class Context implements AiContext
@@ -60,7 +60,7 @@ final class Context implements AiContext
                 $aiConfig->allowProjectInformation,
             ),
         );
-        $instructions->add(new BaseClassInstruction([ Scenario::class, ParameterTypeDefinition::class ]));
+        $instructions->add(new ClassInstruction('Base class definitions', [ Scenario::class, ParameterTypeDefinition::class ]));
         $instructions->add(
             new BlueprintInstruction(
                 new ScenarioBlueprintInstruction(

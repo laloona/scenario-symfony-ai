@@ -27,6 +27,7 @@ use Stateforge\Scenario\Ai\Runtime\Ai;
 use Stateforge\Scenario\Ai\Runtime\Configuration;
 use Stateforge\Scenario\Ai\Runtime\Exception\AttributeValidatorException;
 use Stateforge\Scenario\Ai\Runtime\Exception\InheritanceValidatorException;
+use Stateforge\Scenario\Ai\Runtime\Instruction\ClassInstruction;
 use Stateforge\Scenario\Ai\Runtime\Validation\Validators;
 use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Runtime\Application;
@@ -37,7 +38,6 @@ use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
 use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
 use Stateforge\Scenario\Symfony\Scenario;
 use Stateforge\Scenario\SymfonyAi\Runtime\Context;
-use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\BaseClassInstruction;
 use Symfony\Component\Filesystem\Filesystem;
 use function file_put_contents;
 use function str_replace;
@@ -46,7 +46,7 @@ use function uniqid;
 use const DIRECTORY_SEPARATOR;
 
 #[CoversClass(Context::class)]
-#[UsesClass(BaseClassInstruction::class)]
+#[UsesClass(ClassInstruction::class)]
 #[Group('runtime')]
 #[Small]
 final class ContextTest extends TestCase
