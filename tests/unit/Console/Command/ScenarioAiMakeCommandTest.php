@@ -19,6 +19,7 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use RuntimeException;
+use Stateforge\Scenario\Ai\Console\CliConversation;
 use Stateforge\Scenario\Ai\Contract\AiAdapter;
 use Stateforge\Scenario\Ai\Contract\AiClient;
 use Stateforge\Scenario\Ai\Runtime\Adapter\AdapterRegistry;
@@ -51,6 +52,7 @@ use const PHP_EOL;
 
 #[CoversClass(ScenarioAiMakeCommand::class)]
 #[UsesClass(Context::class)]
+#[UsesClass(CliConversation::class)]
 #[Group('command')]
 #[Small]
 final class ScenarioAiMakeCommandTest extends TestCase
@@ -120,6 +122,10 @@ final class ScenarioAiMakeCommandTest extends TestCase
         self::assertStringContainsString('Welcome to Scenario Symfony AI!', $tester->getDisplay());
         self::assertStringContainsString('configure your project doc', $tester->getDisplay());
         $display = str_replace(['\\', "\r\n"], ['/', "\n"], $tester->getDisplay());
+        self::assertStringContainsString(
+            'ScenarioSymfonyframework.',
+            preg_replace('/\s+/', '', $display) ?? $display,
+        );
         $expectedPath = str_replace('\\', '/', $target . '.ai');
         self::assertStringContainsString(
             preg_replace('/\s+/', '', $expectedPath) ?? $expectedPath,
