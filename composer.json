@@ -27,7 +27,7 @@
   },
   "require": {
     "php": ">=8.2",
-    "stateforge/scenario-symfony": "~1.2-dev",
+    "stateforge/scenario-symfony": "~1.2",
     "stateforge/scenario-ai": "~1.0-dev"
   },
   "autoload": {
