@@ -19,7 +19,6 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use RuntimeException;
-use Stateforge\Scenario\Ai\Console\CliConversation;
 use Stateforge\Scenario\Ai\Contract\AiAdapter;
 use Stateforge\Scenario\Ai\Contract\AiClient;
 use Stateforge\Scenario\Ai\Runtime\Adapter\AdapterRegistry;
