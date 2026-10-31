@@ -33,6 +33,7 @@ use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration as 
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Stateforge\Scenario\SymfonyAi\Console\Command\ScenarioAiMakeCommand;
 use Stateforge\Scenario\SymfonyAi\Runtime\Context;
+use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\SymfonyVersion;
 use Stateforge\Scenario\SymfonyAi\Tests\Files\SharedProjectClass;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -51,6 +52,7 @@ use const PHP_EOL;
 
 #[CoversClass(ScenarioAiMakeCommand::class)]
 #[UsesClass(Context::class)]
+#[UsesClass(SymfonyVersion::class)]
 #[Group('command')]
 #[Small]
 final class ScenarioAiMakeCommandTest extends TestCase

@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Stateforge\Scenario\Ai\Runtime\Adapter\AiRequest;
@@ -36,6 +37,7 @@ use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
 use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
 use Stateforge\Scenario\Symfony\Scenario;
 use Stateforge\Scenario\SymfonyAi\Runtime\Context;
+use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\SymfonyVersion;
 use Symfony\Component\Filesystem\Filesystem;
 use function file_put_contents;
 use function str_replace;
@@ -44,6 +46,7 @@ use function uniqid;
 use const DIRECTORY_SEPARATOR;
 
 #[CoversClass(Context::class)]
+#[UsesClass(SymfonyVersion::class)]
 #[Group('runtime')]
 #[Small]
 final class ContextTest extends TestCase
