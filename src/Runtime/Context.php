@@ -30,6 +30,8 @@ use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
 use Stateforge\Scenario\Symfony\Scenario;
+use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\SymfonyVersion;
+use Symfony\Component\HttpKernel\Kernel;
 use const DIRECTORY_SEPARATOR;
 
 final class Context implements AiContext
@@ -60,6 +62,7 @@ final class Context implements AiContext
                 $aiConfig->allowProjectInformation,
             ),
         );
+        $instructions->add(new SymfonyVersion(Kernel::VERSION));
         $instructions->add(new ClassInstruction('Base class definitions', [ Scenario::class, ParameterTypeDefinition::class ]));
         $instructions->add(
             new BlueprintInstruction(
