@@ -50,7 +50,6 @@ use const DIRECTORY_SEPARATOR;
 #[CoversClass(Context::class)]
 #[UsesClass(SymfonyVersion::class)]
 #[UsesClass(ParameterImplementationInstruction::class)]
-#[UsesClass(ClassDoesNotExistException::class)]
 #[Group('runtime')]
 #[Small]
 final class ContextTest extends TestCase
