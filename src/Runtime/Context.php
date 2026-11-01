@@ -17,19 +17,25 @@ use Stateforge\Scenario\Ai\Runtime\Adapter\AiRequest;
 use Stateforge\Scenario\Ai\Runtime\Ai;
 use Stateforge\Scenario\Ai\Runtime\Instruction\BlueprintInstruction;
 use Stateforge\Scenario\Ai\Runtime\Instruction\ClassInstruction;
+use Stateforge\Scenario\Ai\Runtime\Instruction\FinalValidationInstruction;
 use Stateforge\Scenario\Ai\Runtime\Instruction\GeneralInstructions;
 use Stateforge\Scenario\Ai\Runtime\Instruction\Instruction;
 use Stateforge\Scenario\Ai\Runtime\Instruction\Instructions;
 use Stateforge\Scenario\Ai\Runtime\Instruction\ParameterBlueprintInstruction;
 use Stateforge\Scenario\Ai\Runtime\Instruction\ScenarioBlueprintInstruction;
+use Stateforge\Scenario\Ai\Runtime\Validation\ClassValidator;
 use Stateforge\Scenario\Ai\Runtime\Validation\CodeValidator;
 use Stateforge\Scenario\Ai\Runtime\Validation\Validator;
 use Stateforge\Scenario\Ai\Runtime\Validation\Validators;
 use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Stateforge\Scenario\Core\Attribute\AsScenario;
+use Stateforge\Scenario\Core\Contract\ScenarioInterface;
+use Stateforge\Scenario\Core\ParameterTypeDefinition as CoreParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Scenario as CoreScenario;
 use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
 use Stateforge\Scenario\Symfony\Scenario;
+use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\ParameterImplementationInstruction;
 use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\SymfonyVersion;
 use Symfony\Component\HttpKernel\Kernel;
 use const DIRECTORY_SEPARATOR;
@@ -63,7 +69,13 @@ final class Context implements AiContext
             ),
         );
         $instructions->add(new SymfonyVersion(Kernel::VERSION));
-        $instructions->add(new ClassInstruction('Base class definitions', [ Scenario::class, ParameterTypeDefinition::class ]));
+        $instructions->add(new ClassInstruction('Base class definitions', [
+            Scenario::class,
+            ParameterTypeDefinition::class,
+            CoreScenario::class,
+            ScenarioInterface::class,
+            CoreParameterTypeDefinition::class,
+        ]));
         $instructions->add(
             new BlueprintInstruction(
                 new ScenarioBlueprintInstruction(
@@ -76,6 +88,8 @@ final class Context implements AiContext
                 ),
             ),
         );
+        $instructions->add(new ParameterImplementationInstruction());
+        $instructions->add(new FinalValidationInstruction());
 
         return $instructions;
     }
@@ -83,6 +97,7 @@ final class Context implements AiContext
     public function validator(): Validator
     {
         $validators = new Validators();
+        $validators->add(new ClassValidator());
         $validators->add(new CodeValidator(
             Scenario::class,
             AsScenario::class,

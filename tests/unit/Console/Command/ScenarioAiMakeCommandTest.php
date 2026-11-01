@@ -33,6 +33,7 @@ use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration as 
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Stateforge\Scenario\SymfonyAi\Console\Command\ScenarioAiMakeCommand;
 use Stateforge\Scenario\SymfonyAi\Runtime\Context;
+use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\ParameterImplementationInstruction;
 use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\SymfonyVersion;
 use Stateforge\Scenario\SymfonyAi\Tests\Files\SharedProjectClass;
 use Symfony\Component\Console\Command\Command;
@@ -53,6 +54,7 @@ use const PHP_EOL;
 #[CoversClass(ScenarioAiMakeCommand::class)]
 #[UsesClass(Context::class)]
 #[UsesClass(SymfonyVersion::class)]
+#[UsesClass(ParameterImplementationInstruction::class)]
 #[Group('command')]
 #[Small]
 final class ScenarioAiMakeCommandTest extends TestCase
@@ -142,7 +144,7 @@ final class ScenarioAiMakeCommandTest extends TestCase
     public function testAsksFollowUpQuestionAndForwardsAnswer(): void
     {
         $this->responses([
-            new AiResponse('question', null, GenerationType::Scenario, 'Which state?', []),
+            new AiResponse('question', null, GenerationType::Scenario, 'Which state?', [], null),
             $this->generatedResponse(),
         ], projectDoc: 'docs');
         $tester = new CommandTester($this->command());
@@ -174,7 +176,7 @@ final class ScenarioAiMakeCommandTest extends TestCase
     {
         self::assertTrue(class_exists(SharedProjectClass::class), 'The shared project fixture must be autoloadable.');
         $this->responses([
-            new AiResponse('classes', null, GenerationType::Scenario, null, [SharedProjectClass::class]),
+            new AiResponse('classes', null, GenerationType::Scenario, null, [SharedProjectClass::class], null),
             $this->generatedResponse(),
         ]);
         $tester = new CommandTester($this->command());
@@ -194,7 +196,7 @@ final class ScenarioAiMakeCommandTest extends TestCase
     #[DataProvider('incompleteResponseProvider')]
     public function testReportsMissingCodeAtQuestionLimit(?string $php, ?string $type): void
     {
-        $this->responses([new AiResponse('id', $php, $type === null ? null : GenerationType::from($type), 'Need details', [])], limit: 1);
+        $this->responses([new AiResponse('id', $php, $type === null ? null : GenerationType::from($type), 'Need details', [], null)], limit: 1);
         $tester = new CommandTester($this->command());
         $tester->setInputs(['Generate code']);
 
@@ -262,7 +264,7 @@ final class ScenarioAiMakeCommandTest extends TestCase
         $parent = $type === 'scenario' ? 'Scenario' : 'ParameterTypeDefinition';
         $code = '<?php namespace Stateforge\\Suite\\Scenario\\Main; #[\\Stateforge\\Scenario\\Core\\Attribute\\' . $attribute . '] final class Generated extends \\Stateforge\\Scenario\\Symfony\\' . $parent . ' {}';
 
-        return new AiResponse('generated', $code, GenerationType::from($type), null, []);
+        return new AiResponse('generated', $code, GenerationType::from($type), null, [], null);
     }
 
     private function generatedPath(string $type): string

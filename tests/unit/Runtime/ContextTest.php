@@ -26,6 +26,7 @@ use Stateforge\Scenario\Ai\Runtime\AdapterConfiguration;
 use Stateforge\Scenario\Ai\Runtime\Ai;
 use Stateforge\Scenario\Ai\Runtime\Configuration;
 use Stateforge\Scenario\Ai\Runtime\Exception\AttributeValidatorException;
+use Stateforge\Scenario\Ai\Runtime\Exception\ClassDoesNotExistException;
 use Stateforge\Scenario\Ai\Runtime\Exception\InheritanceValidatorException;
 use Stateforge\Scenario\Ai\Runtime\Validation\Validators;
 use Stateforge\Scenario\Core\Attribute\AsScenario;
@@ -37,6 +38,7 @@ use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
 use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
 use Stateforge\Scenario\Symfony\Scenario;
 use Stateforge\Scenario\SymfonyAi\Runtime\Context;
+use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\ParameterImplementationInstruction;
 use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\SymfonyVersion;
 use Symfony\Component\Filesystem\Filesystem;
 use function file_put_contents;
@@ -47,6 +49,8 @@ use const DIRECTORY_SEPARATOR;
 
 #[CoversClass(Context::class)]
 #[UsesClass(SymfonyVersion::class)]
+#[UsesClass(ParameterImplementationInstruction::class)]
+#[UsesClass(ClassDoesNotExistException::class)]
 #[Group('runtime')]
 #[Small]
 final class ContextTest extends TestCase
@@ -115,6 +119,8 @@ final class ContextTest extends TestCase
         self::assertStringContainsString('Symfony framework documentation marker', $text);
         self::assertStringContainsString('Symfony scenario blueprint marker', $text);
         self::assertStringContainsString('Symfony parameter blueprint marker', $text);
+        self::assertMatchesRegularExpression('/Symfony parameter blueprint marker[\s\S]*ParameterType Implementation Rules[\s\S]*Final Validation/', $text);
+        self::assertStringContainsString('Implement complete validation rules in constraints().', $text);
         self::assertStringContainsString('name: main, description: Main Symfony suite, directory: scenario/main, namespace: Scenario\\Main', $text);
         self::assertStringContainsString('directory: scenario/parameter, namespace: Scenario\\Parameter', $text);
         self::assertStringContainsString('Maximum clarification questions: 7', $text);
@@ -153,7 +159,7 @@ final class ContextTest extends TestCase
         $validator = (new Context())->validator();
         self::assertInstanceOf(Validators::class, $validator);
 
-        $validator->validate(new AiResponse(null, $code, GenerationType::from($type), null, []));
+        $validator->validate(new AiResponse(null, $code, GenerationType::from($type), null, [], null));
     }
 
     #[DataProvider('generationProvider')]
@@ -163,7 +169,7 @@ final class ContextTest extends TestCase
         $this->expectException(AttributeValidatorException::class);
         $this->expectExceptionMessage('Missing required attribute "' . $attribute . '".');
 
-        (new Context())->validator()->validate(new AiResponse(null, $code, GenerationType::from($type), null, []));
+        (new Context())->validator()->validate(new AiResponse(null, $code, GenerationType::from($type), null, [], null));
     }
 
     #[DataProvider('generationProvider')]
@@ -173,7 +179,35 @@ final class ContextTest extends TestCase
         $code = '<?php #[\\' . $attribute . '] class Generated extends \\' . $coreParent . ' {}';
         $this->expectException(InheritanceValidatorException::class);
 
-        (new Context())->validator()->validate(new AiResponse(null, $code, GenerationType::from($type), null, []));
+        (new Context())->validator()->validate(new AiResponse(null, $code, GenerationType::from($type), null, [], null));
+    }
+
+    public function testValidatorRejectsMissingClassesBeforeCheckingGeneratedCode(): void
+    {
+        $response = new AiResponse('id', '<?php class {', GenerationType::Scenario, null, ['Missing\RequestedClass'], null);
+        $this->expectException(ClassDoesNotExistException::class);
+        $this->expectExceptionMessage('class "Missing\RequestedClass" does not exist.');
+
+        (new Context())->validator()->validate($response);
+    }
+
+    public function testValidatorRejectsMissingMatchWithoutGeneratedCode(): void
+    {
+        $response = new AiResponse('id', null, GenerationType::Scenario, null, [], 'Missing\MatchingClass');
+        $this->expectException(ClassDoesNotExistException::class);
+        $this->expectExceptionMessage('class "Missing\MatchingClass" does not exist.');
+
+        (new Context())->validator()->validate($response);
+    }
+
+    public function testValidatorAcceptsExistingClassReferencesWithoutGeneratedCode(): void
+    {
+        $response = new AiResponse('id', null, GenerationType::Scenario, null, [self::class], self::class);
+
+        (new Context())->validator()->validate($response);
+
+        self::assertSame([self::class], $response->classes);
+        self::assertSame(self::class, $response->match);
     }
 
     /** @return array<string, array{string, string, string}> */
