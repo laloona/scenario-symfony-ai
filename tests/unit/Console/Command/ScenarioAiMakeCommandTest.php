@@ -28,6 +28,7 @@ use Stateforge\Scenario\Ai\Runtime\Adapter\GenerationType;
 use Stateforge\Scenario\Ai\Runtime\AdapterConfiguration;
 use Stateforge\Scenario\Ai\Runtime\Ai;
 use Stateforge\Scenario\Ai\Runtime\Configuration;
+use Stateforge\Scenario\Ai\Runtime\SourceCodeRegistry;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration as CoreConfiguration;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
@@ -66,6 +67,7 @@ final class ScenarioAiMakeCommandTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->resetSourceCodeRegistry();
         $this->requests = [];
         $this->projectDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'scenario-symfony-ai-make-' . uniqid('', true);
         (new Filesystem())->mkdir($this->projectDirectory);
@@ -90,6 +92,7 @@ final class ScenarioAiMakeCommandTest extends TestCase
 
     protected function tearDown(): void
     {
+        $this->resetSourceCodeRegistry();
         $core = new ReflectionClass(Application::class);
         $core->getProperty('rootDir')->setValue(null, null);
         $core->getProperty('configuration')->setValue(null, null);
@@ -256,6 +259,14 @@ final class ScenarioAiMakeCommandTest extends TestCase
         $registry = new AdapterRegistry();
         $registry->register('local-test', $adapter);
         (new ReflectionClass(Ai::class))->getProperty('registry')->setValue(null, $registry);
+    }
+
+    private function resetSourceCodeRegistry(): void
+    {
+        // Older supported AI versions do not maintain this registry.
+        if (class_exists(SourceCodeRegistry::class)) {
+            (new ReflectionClass(SourceCodeRegistry::class))->getProperty('classes')->setValue(null, []);
+        }
     }
 
     private function generatedResponse(string $type = 'scenario'): AiResponse
