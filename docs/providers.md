@@ -50,6 +50,23 @@ The Claude adapter uses the Anthropic Messages API and processes structured resp
 
 The defaults above reflect the adapter's current configuration class. Check that the configured model and API version are accepted by your Anthropic account. `maxTokens` must be a valid integer value.
 
+### Model Selection and Result Quality
+
+The quality of generated code depends on the capabilities of the selected AI model.
+Different models may interpret the same requirements differently and produce different results, even when using identical instructions and project information.
+
+This can affect:
+
+- Understanding of application-specific requirements
+- Identification and reuse of existing implementations
+- Correct application of Scenario framework conventions
+- Handling of complex dependencies
+- Accuracy and completeness of generated code
+
+More capable models may provide better results for complex tasks, while smaller models may offer advantages in speed and cost.
+Scenario Symfony AI does not require a specific model. Developers can select the model that best fits their requirements using the adapter configuration.
+Regardless of the selected model, generated implementations should always be reviewed and tested before activation.
+
 ## Custom Adapters
 
 A custom adapter lets you connect another AI service, a company-hosted model, or a different transport implementation. Scenario AI retains responsibility for instruction generation, conversation management, code validation, and writing generated files.

@@ -63,7 +63,7 @@ Please describe the scenario or parameter type.
 
 Enter your requirements in natural language.
 
-Scenario Symfony AI analyzes the request and attempts to generate a corresponding PHP implementation.
+Scenario Symfony AI analyzes the request and checks whether an existing implementation already satisfies the requirements. If no compatible implementation is available, the AI attempts to generate the corresponding PHP code.
 
 If additional information is required, the AI may ask follow-up questions or request access to existing application classes.
 

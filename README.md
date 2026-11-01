@@ -33,6 +33,7 @@ The developer remains responsible for reviewing and approving the generated impl
 
 - **Natural language code generation** – Generate Scenarios and Parameter Types by describing their intended behavior.
 - **Framework-aware generation** – Uses Scenario Symfony documentation, configuration, and code blueprints to guide the AI.
+- **Existing implementation reuse** – Identifies compatible Scenarios and Parameter Types to avoid generating duplicate implementations.
 - **Interactive conversations** – The AI can ask follow-up questions when additional information is required.
 - **Project context** – Optionally provide project-specific documentation to improve generated results. Control the use of project-specific information with `allowProjectInformation` in `scenario-ai.xml`.
 - **Controlled source code access** – The AI can request access to existing PHP classes. Source code is only shared after explicit user confirmation.
@@ -151,6 +152,8 @@ Each adapter is responsible for creating a client that communicates with its pro
 ### Conversation Management
 
 Conversation management coordinates requests, responses, follow-up questions, and generation attempts.
+
+The selected AI model influences the quality and reliability of generated results. Developers can choose a model based on their requirements for accuracy, performance, and cost.
 
 ### Response Processing
 

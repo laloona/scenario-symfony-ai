@@ -22,7 +22,19 @@ The supported generation types include:
 - Scenario
 - Parameter Type
 
-## 3. Request Additional Information
+## 3. Reuse Existing Implementations
+
+Before generating new code, Scenario Symfony AI checks whether an existing Scenario or Parameter Type already satisfies the requested requirements.
+If a fully compatible implementation is available, the AI may return its fully qualified class name instead of generating a duplicate implementation.
+
+For example, when requesting a Parameter Type that validates email addresses, the AI may identify an existing `EmailType` implementation.
+An existing implementation is only considered a match if it satisfies all specified requirements. Similar functionality alone is not sufficient.
+If the available information is insufficient to determine compatibility, the AI may request access to the relevant class source code.
+
+When a matching implementation is identified, no new PHP file is generated.
+The developer can then use the existing class directly.
+
+## 4. Request Additional Information
 
 If the request is incomplete or ambiguous, the AI may ask follow-up questions.
 
@@ -30,7 +42,7 @@ It may also request access to existing application classes.
 
 Source code is only shared after explicit confirmation.
 
-## 4. Generate PHP Code
+## 5. Generate PHP Code
 
 The AI generates PHP code based on the available instructions and project context.
 
@@ -43,7 +55,7 @@ The generated implementation may include:
 - Method implementations
 - TODO comments for missing application-specific details
 
-## 5. Validate the Result
+## 6. Validate the Result
 
 Scenario Symfony AI validates the generated result before accepting it.
 
@@ -51,19 +63,19 @@ If validation fails, the generation process can request a corrected response.
 
 Validation helps ensure that generated code follows the expected structure and conventions of the Scenario framework.
 
-## 6. Determine the Destination
+## 7. Determine the Destination
 
 The generated PHP code is analyzed using an Abstract Syntax Tree (AST).
 
 Scenario Symfony AI uses the generated namespace and class name together with the Scenario configuration to determine the destination directory.
 
-## 7. Save the Generated Code
+## 8. Save the Generated Code
 
 Once the result has been accepted, the generated PHP code is saved to a file.
 
 The file receives an `.ai` suffix to prevent immediate activation.
 
-## 8. Review and Activate
+## 9. Review and Activate
 
 Review the generated implementation carefully.
 
