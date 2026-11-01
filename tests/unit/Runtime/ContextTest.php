@@ -30,17 +30,23 @@ use Stateforge\Scenario\Ai\Runtime\Exception\ClassDoesNotExistException;
 use Stateforge\Scenario\Ai\Runtime\Exception\InheritanceValidatorException;
 use Stateforge\Scenario\Ai\Runtime\Validation\Validators;
 use Stateforge\Scenario\Core\Attribute\AsScenario;
+use Stateforge\Scenario\Core\Contract\ScenarioInterface;
+use Stateforge\Scenario\Core\ParameterType;
+use Stateforge\Scenario\Core\ParameterTypeDefinition as CoreParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration as CoreConfiguration;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeRegistry;
 use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
 use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
+use Stateforge\Scenario\Core\Scenario as CoreScenario;
+use Stateforge\Scenario\Symfony\ParameterTypeDefinition;
 use Stateforge\Scenario\Symfony\Scenario;
 use Stateforge\Scenario\SymfonyAi\Runtime\Context;
 use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\ParameterImplementationInstruction;
 use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\SymfonyVersion;
 use Symfony\Component\Filesystem\Filesystem;
+use function file_get_contents;
 use function file_put_contents;
 use function str_replace;
 use function sys_get_temp_dir;
@@ -125,6 +131,20 @@ final class ContextTest extends TestCase
         self::assertStringContainsString('Maximum clarification questions: 7', $text);
         self::assertStringContainsString('Clarification questions already asked: 2', $text);
         self::assertStringContainsString('Base class definitions:', $text);
+        foreach ([
+            Scenario::class,
+            ParameterTypeDefinition::class,
+            CoreScenario::class,
+            ScenarioInterface::class,
+            ParameterType::class,
+            CoreParameterTypeDefinition::class,
+        ] as $class) {
+            $path = (new ReflectionClass($class))->getFileName();
+            self::assertIsString($path);
+            $source = file_get_contents($path);
+            self::assertIsString($source);
+            self::assertStringContainsString($source, $text, 'Missing class definition: ' . $class);
+        }
         self::assertStringContainsString('namespace Stateforge\\Scenario\\Symfony;', $text);
         self::assertStringContainsString('abstract class Scenario extends', $text);
         self::assertStringContainsString('abstract class ParameterTypeDefinition extends', $text);
