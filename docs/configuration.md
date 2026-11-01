@@ -40,9 +40,11 @@ projectDoc="mydocs"
 
 The path is resolved relative to the project root directory.
 
-Project documentation helps the AI understand application-specific conventions, architecture, and requirements.
+Only Markdown files (`.md`) are loaded from the specified directory and provided to the AI as additional context.
 
-Only configure documentation that is appropriate to share with the selected AI provider.
+Project documentation helps the AI understand application-specific conventions, architecture, and requirements, improving the quality of generated code.
+
+**Important:** Only include documentation that is appropriate to share with the selected AI provider.
 
 ## `allowProjectInformation`
 
