@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
+use Stateforge\Scenario\Ai\Runtime\AdapterMode;
 use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\ParameterImplementationInstruction;
 
 #[CoversClass(ParameterImplementationInstruction::class)]
@@ -24,7 +25,7 @@ final class ParameterImplementationInstructionTest extends TestCase
 {
     public function testUsesInheritedCastAndRequiresSymfonyConstraints(): void
     {
-        $text = (new ParameterImplementationInstruction())->instruct();
+        $text = (new ParameterImplementationInstruction())->instruct(AdapterMode::Cli);
 
         self::assertStringContainsString('The Symfony ParameterTypeDefinition base class already provides a final cast() method.', $text);
         self::assertStringContainsString('This method converts values using valueType() and validates them using constraints().', $text);
@@ -37,7 +38,7 @@ final class ParameterImplementationInstructionTest extends TestCase
 
     public function testRequiresCompatibleValueTypeInstances(): void
     {
-        $text = (new ParameterImplementationInstruction())->instruct();
+        $text = (new ParameterImplementationInstruction())->instruct(AdapterMode::Cli);
 
         self::assertStringContainsString('The valueType() method MUST return an instance of the appropriate ValueType class.', $text);
         self::assertStringContainsString('NEVER return a class name string from valueType().', $text);
@@ -47,7 +48,7 @@ final class ParameterImplementationInstructionTest extends TestCase
 
     public function testRequestsMissingInformationInsteadOfGeneratingIncompleteCode(): void
     {
-        $text = (new ParameterImplementationInstruction())->instruct();
+        $text = (new ParameterImplementationInstruction())->instruct(AdapterMode::Cli);
 
         self::assertStringContainsString('Invalid or unsupported input values MUST be rejected through the validation rules.', $text);
         self::assertStringContainsString('Never replace required validation or conversion logic with placeholder comments.', $text);

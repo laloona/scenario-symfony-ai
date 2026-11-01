@@ -12,6 +12,8 @@
 namespace Stateforge\Scenario\SymfonyAi\Console\Command;
 
 use Stateforge\Scenario\Ai\Console\CliConversation;
+use Stateforge\Scenario\Ai\Runtime\AdapterMode;
+use Stateforge\Scenario\Ai\Runtime\Ai;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Symfony\Console\Command\ScenarioCommand;
 use Stateforge\Scenario\Symfony\Console\Output;
@@ -29,6 +31,13 @@ final class ScenarioAiMakeCommand extends ScenarioCommand
             ->setName('scenario:ai:make')
             ->setDescription('Make a scenario or parameter type with AI - should only be used for dev/test')
         ;
+    }
+
+    public function isEnabled(): bool
+    {
+        $config = Ai::config();
+        return parent::isEnabled()
+            && $config->adapter->mode !== AdapterMode::Skill;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

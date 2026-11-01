@@ -26,6 +26,7 @@ use Stateforge\Scenario\Ai\Runtime\Adapter\AiRequest;
 use Stateforge\Scenario\Ai\Runtime\Adapter\AiResponse;
 use Stateforge\Scenario\Ai\Runtime\Adapter\GenerationType;
 use Stateforge\Scenario\Ai\Runtime\AdapterConfiguration;
+use Stateforge\Scenario\Ai\Runtime\AdapterMode;
 use Stateforge\Scenario\Ai\Runtime\Ai;
 use Stateforge\Scenario\Ai\Runtime\Configuration;
 use Stateforge\Scenario\Ai\Runtime\SourceCodeRegistry;
@@ -84,7 +85,7 @@ final class ScenarioAiMakeCommandTest extends TestCase
             null,
             false,
             3,
-            new AdapterConfiguration('local-test', null, null, []),
+            new AdapterConfiguration(AdapterMode::All, 'local-test', null, null, []),
         ));
         // Never allow Ai::registry() to initialize the real API adapters.
         $ai->getProperty('registry')->setValue(null, new AdapterRegistry());
@@ -238,7 +239,7 @@ final class ScenarioAiMakeCommandTest extends TestCase
             $projectDoc,
             false,
             $limit,
-            new AdapterConfiguration('local-test', null, null, []),
+            new AdapterConfiguration(AdapterMode::All, 'local-test', null, null, []),
         ));
         $client = $this->createMock(AiClient::class);
         $client->expects(self::exactly(count($responses)))->method('request')->willReturnCallback(
@@ -300,4 +301,34 @@ final class ScenarioAiMakeCommandTest extends TestCase
 
         return new ScenarioAiMakeCommand($kernel, new Filesystem());
     }
+    #[DataProvider('enabledConfigurations')]
+    public function testIsEnabledHonorsAdapterModeEnvironmentAndInstallation(AdapterMode $mode, string $environment, bool $installed, bool $expected): void
+    {
+        (new ReflectionClass(Ai::class))->getProperty('config')->setValue(
+            null,
+            new Configuration(null, false, 3, new AdapterConfiguration($mode, 'test', null, null, [])),
+        );
+        $kernel = self::createStub(KernelInterface::class);
+        $kernel->method('getProjectDir')->willReturn($this->projectDirectory);
+        $kernel->method('getEnvironment')->willReturn($environment);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->expects($environment === 'prod' ? self::never() : self::once())
+            ->method('exists')
+            ->with($this->projectDirectory . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'packages' . DIRECTORY_SEPARATOR . 'scenario.yaml')
+            ->willReturn($installed);
+
+        self::assertSame($expected, (new ScenarioAiMakeCommand($kernel, $filesystem))->isEnabled());
+    }
+
+    /** @return iterable<string, array{AdapterMode, string, bool, bool}> */
+    public static function enabledConfigurations(): iterable
+    {
+        foreach (AdapterMode::cases() as $mode) {
+            yield $mode->value . ' in dev' => [$mode, 'dev', true, $mode !== AdapterMode::Skill];
+            yield $mode->value . ' in test' => [$mode, 'test', true, $mode !== AdapterMode::Skill];
+            yield $mode->value . ' in production' => [$mode, 'prod', true, false];
+            yield $mode->value . ' without installation' => [$mode, 'test', false, false];
+        }
+    }
+
 }

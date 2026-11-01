@@ -11,11 +11,12 @@
 
 namespace Stateforge\Scenario\SymfonyAi\Runtime\Instruction;
 
-use Stateforge\Scenario\Ai\Runtime\Instruction\Instruction;
+use Stateforge\Scenario\Ai\Contract\Instruction;
+use Stateforge\Scenario\Ai\Runtime\AdapterMode;
 
 final class ParameterImplementationInstruction implements Instruction
 {
-    public function instruct(): string
+    public function instruct(AdapterMode $mode): string
     {
         return <<<Instruction
 ParameterType Implementation Rules

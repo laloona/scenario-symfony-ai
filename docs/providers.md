@@ -50,6 +50,26 @@ The Claude adapter uses the Anthropic Messages API and processes structured resp
 
 The defaults above reflect the adapter's current configuration class. Check that the configured model and API version are accepted by your Anthropic account. `maxTokens` must be a valid integer value.
 
+## Google Gemini
+
+The Google Gemini adapter uses the Responses API and processes structured responses.
+
+```xml
+<adapter type="gemini">
+    <var name="apiKey">YOUR_OPENAI_API_KEY</var>
+    <var name="apiEndpoint">https://generativelanguage.googleapis.com/v1beta/models</var>
+    <var name="model">gemini-3.8-flash</var>
+</adapter>
+```
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `apiKey` | Yes | — | API key used to authenticate requests. |
+| `apiEndpoint` | No | `https://generativelanguage.googleapis.com/v1beta/models` | Endpoint for the OpenAI Responses API. |
+| `model` | No | `gemini-3.8-flash` | Model identifier sent to the API. |
+
+You can omit optional `<var>` elements to use the defaults. Select a model supported by your API account and endpoint.
+
 ### Model Selection and Result Quality
 
 The quality of generated code depends on the capabilities of the selected AI model.

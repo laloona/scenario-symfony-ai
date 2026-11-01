@@ -11,7 +11,8 @@
 
 namespace Stateforge\Scenario\SymfonyAi\Runtime\Instruction;
 
-use Stateforge\Scenario\Ai\Runtime\Instruction\Instruction;
+use Stateforge\Scenario\Ai\Contract\Instruction;
+use Stateforge\Scenario\Ai\Runtime\AdapterMode;
 use function sprintf;
 
 final class SymfonyVersion implements Instruction
@@ -21,7 +22,7 @@ final class SymfonyVersion implements Instruction
     ) {
     }
 
-    public function instruct(): string
+    public function instruct(AdapterMode $mode): string
     {
         return sprintf(
             'Generate code compatible with Symfony %s',

@@ -23,6 +23,7 @@ use Stateforge\Scenario\Ai\Runtime\Adapter\AiRequest;
 use Stateforge\Scenario\Ai\Runtime\Adapter\AiResponse;
 use Stateforge\Scenario\Ai\Runtime\Adapter\GenerationType;
 use Stateforge\Scenario\Ai\Runtime\AdapterConfiguration;
+use Stateforge\Scenario\Ai\Runtime\AdapterMode;
 use Stateforge\Scenario\Ai\Runtime\Ai;
 use Stateforge\Scenario\Ai\Runtime\Configuration;
 use Stateforge\Scenario\Ai\Runtime\Exception\AttributeValidatorException;
@@ -109,7 +110,7 @@ final class ContextTest extends TestCase
             $projectDoc,
             $allowed,
             7,
-            new AdapterConfiguration('not-used', null, null, []),
+            new AdapterConfiguration(AdapterMode::All, 'not-used', null, null, []),
         ));
         $scenario = self::createStub(Scenario::class);
         ScenarioRegistry::getInstance()->register(new ScenarioDefinition(
@@ -119,7 +120,7 @@ final class ContextTest extends TestCase
             [],
         ));
 
-        $text = (new Context())->instruction(new AiRequest(null, 'Generate', 2))->instruct();
+        $text = (new Context())->instruction(new AiRequest(null, 'Generate', 2))->instruct(AdapterMode::Cli);
 
         self::assertStringContainsString('Symfony framework documentation marker', $text);
         self::assertStringContainsString('Symfony scenario blueprint marker', $text);
