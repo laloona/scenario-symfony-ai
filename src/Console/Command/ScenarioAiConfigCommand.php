@@ -11,12 +11,14 @@
 
 namespace Stateforge\Scenario\SymfonyAi\Console\Command;
 
+use Stateforge\Scenario\Ai\Runtime\Ai;
 use Stateforge\Scenario\Symfony\Console\Command\ScenarioCommand;
 use Stateforge\Scenario\Symfony\Console\Output;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Throwable;
 use const DIRECTORY_SEPARATOR;
 
 final class ScenarioAiConfigCommand extends ScenarioCommand
@@ -27,6 +29,16 @@ final class ScenarioAiConfigCommand extends ScenarioCommand
             ->setName('scenario:ai:config')
             ->setDescription('Add the AI config for Scenario AI - should only be used for dev/test')
         ;
+    }
+
+    public function isEnabled(): bool
+    {
+        try {
+            Ai::config();
+            return false;
+        } catch (Throwable $exception) {
+            return parent::isEnabled();
+        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

@@ -12,7 +12,6 @@
 namespace Stateforge\Scenario\SymfonyAi\Console\Command;
 
 use Stateforge\Scenario\Ai\Console\CliSkill;
-use Stateforge\Scenario\Ai\Runtime\AdapterMode;
 use Stateforge\Scenario\Ai\Runtime\Ai;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Symfony\Console\Command\ScenarioCommand;
@@ -22,6 +21,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Throwable;
 
 final class ScenarioAiSkillCommand extends ScenarioCommand
 {
@@ -29,15 +29,19 @@ final class ScenarioAiSkillCommand extends ScenarioCommand
     {
         $this
             ->setName('scenario:ai:skill')
-            ->setDescription('Makes a skill for AI usage - should only be used for dev/test')
+            ->setDescription('Generate a skill IDE-ready skill for AI - should only be used for dev/test')
         ;
     }
 
     public function isEnabled(): bool
     {
-        $config = Ai::config();
-        return parent::isEnabled()
-            && $config->adapter->mode !== AdapterMode::Cli;
+        try {
+            $config = Ai::config();
+            return parent::isEnabled()
+                && $config->adapter->mode->isSkill() === true;
+        } catch (Throwable $exception) {
+            return false;
+        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

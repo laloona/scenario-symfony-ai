@@ -44,8 +44,10 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use function array_shift;
 use function class_exists;
+use function copy;
 use function count;
 use function file_get_contents;
+use function file_put_contents;
 use function preg_replace;
 use function str_replace;
 use function sys_get_temp_dir;
@@ -329,6 +331,29 @@ final class ScenarioAiMakeCommandTest extends TestCase
             yield $mode->value . ' in production' => [$mode, 'prod', true, false];
             yield $mode->value . ' without installation' => [$mode, 'test', false, false];
         }
+    }
+
+    #[DataProvider('configurationFailures')]
+    public function testIsDisabledWhenAiConfigurationCannotBeLoaded(string $failure): void
+    {
+        (new ReflectionClass(Ai::class))->getProperty('config')->setValue(null, null);
+        if ($failure !== 'missing schema') {
+            $schemaDirectory = $this->projectDirectory . '/vendor/stateforge/scenario-ai/xsd';
+            (new Filesystem())->mkdir($schemaDirectory);
+            copy(__DIR__ . '/../../../../vendor/stateforge/scenario-ai/xsd/scenario-ai.xsd', $schemaDirectory . '/scenario-ai.xsd');
+        }
+        if ($failure === 'invalid configuration') {
+            file_put_contents($this->projectDirectory . '/scenario-ai.xml', '<scenario-ai>');
+        }
+        self::assertFalse($this->command()->isEnabled());
+    }
+
+    /** @return iterable<string, array{string}> */
+    public static function configurationFailures(): iterable
+    {
+        yield 'missing schema' => ['missing schema'];
+        yield 'missing configuration' => ['missing configuration'];
+        yield 'invalid configuration' => ['invalid configuration'];
     }
 
 }

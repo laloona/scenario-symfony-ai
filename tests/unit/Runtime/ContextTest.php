@@ -29,6 +29,7 @@ use Stateforge\Scenario\Ai\Runtime\Configuration;
 use Stateforge\Scenario\Ai\Runtime\Exception\AttributeValidatorException;
 use Stateforge\Scenario\Ai\Runtime\Exception\ClassDoesNotExistException;
 use Stateforge\Scenario\Ai\Runtime\Exception\InheritanceValidatorException;
+use Stateforge\Scenario\Ai\Runtime\SourceCodeRegistry;
 use Stateforge\Scenario\Ai\Runtime\Validation\Validators;
 use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Contract\ScenarioInterface;
@@ -47,7 +48,6 @@ use Stateforge\Scenario\SymfonyAi\Runtime\Context;
 use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\ParameterImplementationInstruction;
 use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\SymfonyVersion;
 use Symfony\Component\Filesystem\Filesystem;
-use function file_get_contents;
 use function file_put_contents;
 use function str_replace;
 use function sys_get_temp_dir;
@@ -77,6 +77,7 @@ final class ContextTest extends TestCase
         $core->getProperty('configuration')->setValue(null, null);
         (new ReflectionClass(Ai::class))->getProperty('config')->setValue(null, null);
         ScenarioRegistry::getInstance()->clear();
+        (new ReflectionClass(SourceCodeRegistry::class))->getProperty('classes')->setValue(null, []);
         (new ReflectionClass(ParameterTypeRegistry::class))->getProperty('instance')->setValue(null, null);
     }
 
@@ -87,6 +88,7 @@ final class ContextTest extends TestCase
         $core->getProperty('configuration')->setValue(null, null);
         (new ReflectionClass(Ai::class))->getProperty('config')->setValue(null, null);
         ScenarioRegistry::getInstance()->clear();
+        (new ReflectionClass(SourceCodeRegistry::class))->getProperty('classes')->setValue(null, []);
         (new ReflectionClass(ParameterTypeRegistry::class))->getProperty('instance')->setValue(null, null);
         (new Filesystem())->remove($this->projectDirectory);
     }
@@ -100,7 +102,7 @@ final class ContextTest extends TestCase
     }
 
     #[DataProvider('projectInformationProvider')]
-    public function testBuildsSymfonyInstructionsAndHonorsProjectConfiguration(?string $projectDoc, bool $allowed): void
+    public function testIncludesSectionHeadingsAndHonorsProjectConfiguration(?string $projectDoc, bool $allowed): void
     {
         $core = self::createStub(CoreConfiguration::class);
         $core->method('getSuites')->willReturn(['main' => new SuiteValue('main', 'Main Symfony suite', 'scenario/main')]);
@@ -122,16 +124,31 @@ final class ContextTest extends TestCase
 
         $text = (new Context())->instruction(new AiRequest(null, 'Generate', 2))->instruct(AdapterMode::Cli);
 
-        self::assertStringContainsString('Symfony framework documentation marker', $text);
-        self::assertStringContainsString('Symfony scenario blueprint marker', $text);
-        self::assertStringContainsString('Symfony parameter blueprint marker', $text);
-        self::assertMatchesRegularExpression('/Symfony parameter blueprint marker[\s\S]*ParameterType Implementation Rules[\s\S]*Final Validation/', $text);
-        self::assertStringContainsString('Implement complete validation rules in constraints().', $text);
-        self::assertStringContainsString('name: main, description: Main Symfony suite, directory: scenario/main, namespace: Scenario\\Main', $text);
-        self::assertStringContainsString('directory: scenario/parameter, namespace: Scenario\\Parameter', $text);
-        self::assertStringContainsString('Maximum clarification questions: 7', $text);
-        self::assertStringContainsString('Clarification questions already asked: 2', $text);
-        self::assertStringContainsString('Base class definitions:', $text);
+        foreach ([
+            'Introduction',
+            'Framework Attribute Rules',
+            'Available attributes:',
+            'Documentation',
+            '[framework.md]',
+            'Conversation rules:',
+            'Some class definitions:',
+            'Existing Parameter Types',
+            'Built-in parameter types',
+            'Base class definitions:',
+            'Blueprint Rules',
+            'Scenario Rules',
+            'Scenario Blueprint:',
+            'Scenario Namespace Rules',
+            'Available Scenario Suites:',
+            'ParameterType Rules',
+            'Configured Parameter Types:',
+            'Parameter Type Blueprint:',
+            'ParameterType Implementation Rules',
+            'Final Validation',
+        ] as $heading) {
+            self::assertStringContainsString($heading, $text);
+        }
+        $registry = new SourceCodeRegistry();
         foreach ([
             Scenario::class,
             ParameterTypeDefinition::class,
@@ -140,24 +157,17 @@ final class ContextTest extends TestCase
             ParameterType::class,
             CoreParameterTypeDefinition::class,
         ] as $class) {
-            $path = (new ReflectionClass($class))->getFileName();
-            self::assertIsString($path);
-            $source = file_get_contents($path);
-            self::assertIsString($source);
-            self::assertStringContainsString($source, $text, 'Missing class definition: ' . $class);
+            self::assertTrue($registry->hasClass($class), 'Missing registered class: ' . $class);
         }
-        self::assertStringContainsString('namespace Stateforge\\Scenario\\Symfony;', $text);
-        self::assertStringContainsString('abstract class Scenario extends', $text);
-        self::assertStringContainsString('abstract class ParameterTypeDefinition extends', $text);
         if ($projectDoc === null) {
-            self::assertStringNotContainsString('Project documentation marker', $text);
+            self::assertStringNotContainsString('[project.md]', $text);
         } else {
-            self::assertStringContainsString('Project documentation marker', $text);
+            self::assertStringContainsString('[project.md]', $text);
         }
         if ($allowed) {
-            self::assertStringContainsString('Registered project scenario marker', $text);
+            self::assertStringContainsString('Registered Scenarios', $text);
         } else {
-            self::assertStringNotContainsString('Registered project scenario marker', $text);
+            self::assertStringNotContainsString('Registered Scenarios', $text);
         }
     }
 

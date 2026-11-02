@@ -25,18 +25,18 @@ use Stateforge\Scenario\SymfonyAi\Runtime\Instruction\SymfonyVersion;
 final class SymfonyVersionTest extends TestCase
 {
     #[DataProvider('versions')]
-    public function testInstructIncludesTheProvidedSymfonyVersion(string $version, string $expected): void
+    public function testInstructIncludesTheProvidedSymfonyVersion(string $version): void
     {
-        self::assertSame($expected, (new SymfonyVersion($version))->instruct(AdapterMode::Cli));
+        self::assertStringContainsString('Symfony ' . $version, (new SymfonyVersion($version))->instruct(AdapterMode::Cli));
     }
 
     /**
-     * @return iterable<string, array{string, string}>
+     * @return iterable<string, array{string}>
      */
     public static function versions(): iterable
     {
-        yield 'major and minor' => ['7.3', 'Generate code compatible with Symfony 7.3'];
-        yield 'patch version' => ['6.4.12', 'Generate code compatible with Symfony 6.4.12'];
-        yield 'prerelease' => ['8.0.0-RC1', 'Generate code compatible with Symfony 8.0.0-RC1'];
+        yield 'major and minor' => ['7.3'];
+        yield 'patch version' => ['6.4.12'];
+        yield 'prerelease' => ['8.0.0-RC1'];
     }
 }

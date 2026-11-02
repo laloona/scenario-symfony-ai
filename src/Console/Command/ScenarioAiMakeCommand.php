@@ -12,7 +12,6 @@
 namespace Stateforge\Scenario\SymfonyAi\Console\Command;
 
 use Stateforge\Scenario\Ai\Console\CliConversation;
-use Stateforge\Scenario\Ai\Runtime\AdapterMode;
 use Stateforge\Scenario\Ai\Runtime\Ai;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Symfony\Console\Command\ScenarioCommand;
@@ -22,6 +21,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Throwable;
 
 final class ScenarioAiMakeCommand extends ScenarioCommand
 {
@@ -35,9 +35,13 @@ final class ScenarioAiMakeCommand extends ScenarioCommand
 
     public function isEnabled(): bool
     {
-        $config = Ai::config();
-        return parent::isEnabled()
-            && $config->adapter->mode !== AdapterMode::Skill;
+        try {
+            $config = Ai::config();
+            return parent::isEnabled()
+                && $config->adapter->mode->isCli() === true;
+        } catch (Throwable $exception) {
+            return false;
+        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
