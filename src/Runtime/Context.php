@@ -11,12 +11,12 @@
 
 namespace Stateforge\Scenario\SymfonyAi\Runtime;
 
-use LogicException;
 use Stateforge\Scenario\Ai\Contract\AiContext;
 use Stateforge\Scenario\Ai\Contract\Instruction;
 use Stateforge\Scenario\Ai\Contract\Validator;
 use Stateforge\Scenario\Ai\Runtime\Adapter\AiRequest;
 use Stateforge\Scenario\Ai\Runtime\Ai;
+use Stateforge\Scenario\Ai\Runtime\Exception\ApplicationConfigNotInitializedException;
 use Stateforge\Scenario\Ai\Runtime\Instruction\BlueprintInstruction;
 use Stateforge\Scenario\Ai\Runtime\Instruction\ClassInstruction;
 use Stateforge\Scenario\Ai\Runtime\Instruction\FinalValidationInstruction;
@@ -47,7 +47,7 @@ final class Context implements AiContext
     {
         $config = Application::config();
         if ($config === null) {
-            throw new LogicException('Scenario configuration is not initialized.');
+            throw new ApplicationConfigNotInitializedException();
         }
 
         $aiConfig = Ai::config();

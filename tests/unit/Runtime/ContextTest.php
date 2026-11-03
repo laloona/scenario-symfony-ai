@@ -11,7 +11,6 @@
 
 namespace Stateforge\Scenario\SymfonyAi\Tests\Unit\Runtime;
 
-use LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -26,9 +25,10 @@ use Stateforge\Scenario\Ai\Runtime\AdapterConfiguration;
 use Stateforge\Scenario\Ai\Runtime\AdapterMode;
 use Stateforge\Scenario\Ai\Runtime\Ai;
 use Stateforge\Scenario\Ai\Runtime\Configuration;
-use Stateforge\Scenario\Ai\Runtime\Exception\AttributeValidatorException;
-use Stateforge\Scenario\Ai\Runtime\Exception\ClassDoesNotExistException;
-use Stateforge\Scenario\Ai\Runtime\Exception\InheritanceValidatorException;
+use Stateforge\Scenario\Ai\Runtime\Exception\ApplicationConfigNotInitializedException;
+use Stateforge\Scenario\Ai\Runtime\Exception\Validation\AttributeValidatorException;
+use Stateforge\Scenario\Ai\Runtime\Exception\Validation\ClassDoesNotExistException;
+use Stateforge\Scenario\Ai\Runtime\Exception\Validation\InheritanceValidatorException;
 use Stateforge\Scenario\Ai\Runtime\SourceCodeRegistry;
 use Stateforge\Scenario\Ai\Runtime\Validation\Validators;
 use Stateforge\Scenario\Core\Attribute\AsScenario;
@@ -95,7 +95,7 @@ final class ContextTest extends TestCase
 
     public function testInstructionRequiresInitializedCoreConfiguration(): void
     {
-        $this->expectException(LogicException::class);
+        $this->expectException(ApplicationConfigNotInitializedException::class);
         $this->expectExceptionMessage('Scenario configuration is not initialized.');
 
         (new Context())->instruction(new AiRequest(null, 'Generate', 1));
