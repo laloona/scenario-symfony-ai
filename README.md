@@ -13,11 +13,11 @@
 
 **Generate Scenarios and Parameter Types using artificial intelligence.**
 
-Stateforge Scenario Symfony AI extends the Stateforge Scenario Symfony framework with AI-assisted code generation.
+Stateforge Scenario Symfony AI extends the Stateforge Scenario Symfony framework with AI-assisted code generation and skill generation for AI coding agents.
 
-Instead of writing every Scenario or Parameter Type manually, describe what you want to achieve in natural language. Scenario AI uses the framework documentation, predefined code blueprints, and optional project-specific information to generate PHP code that follows the conventions of the Scenario Symfony framework.
+Instead of writing every Scenario or Parameter Type manually, developers can describe their requirements in natural language. Scenario Symfony AI uses framework documentation, predefined code blueprints, and optional project-specific information to guide code generation.
 
-The generated code is validated and saved for review before activation.
+The interactive generator validates generated PHP code and saves it for review before activation. Alternatively, Scenario AI can generate reusable skills that provide coding agents with the knowledge required to create framework-compatible implementations.
 
 ## Philosophy
 
