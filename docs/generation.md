@@ -145,4 +145,5 @@ Developers remain responsible for reviewing and testing generated implementation
 
 ## Next Steps
 
+- [AI Skill Generation](skill.md)
 - [AI Providers](providers.md)

@@ -62,13 +62,18 @@ This setting is separate from `projectDoc`, which specifies the location of opti
 
 ## `adapter`
 
-Defines the AI provider used for code generation. You can use `claude` or `openai` or implement use a `custom` adapter.
+Defines the AI provider used for code generation. You can use `claude`, `openai` or `gemini` or implement use a `custom` adapter.
 
 ```xml
-<adapter type="openai">
+<adapter mode="all" type="openai">
     <var name="apiKey">YOUR_OPENAI_API_KEY</var>
 </adapter>
 ```
+
+The `mode` attribute defines which AI features are enabled. Possible values are:
+* `all` — Enables both CLI-based generation of Scenarios and ParameterTypes and skill generation.
+* `cli` — Enables only CLI-based generation of Scenarios and ParameterTypes.
+* `skill` — Enables only skill generation for AI coding agents.
 
 The `type` attribute selects the adapter.
 
@@ -82,4 +87,5 @@ Each variable uses a `name` attribute and a text value.
 
 - [Interactive Conversation](conversation.md)
 - [Code Generation Process](generation.md)
+- [AI Skill Generation](skill.md)
 - [AI Providers](providers.md)
