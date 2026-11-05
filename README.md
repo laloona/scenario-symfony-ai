@@ -88,20 +88,9 @@ Depending on the available project information, the generated code may include a
 
 The generated implementation depends on the information available about the application's entities and persistence layer.
 
-If the AI does not know how your application creates or persists users, it may generate TODO comments instead of inventing application-specific APIs.
+If the requested Scenario depends on application-specific classes, methods, or behavior that cannot be determined from the available project context, Scenario Symfony AI requests the missing information before generating the implementation.
 
-For example:
-
-```php
-public function up(): void
-{
-    // TODO: Instantiate three App\Entity\User objects.
-    // TODO: Set the required fields according to the entity API.
-    // TODO: Persist the users using the project's persistence layer.
-}
-```
-
-This allows Scenario Symfony AI to generate a useful starting point without making unverifiable assumptions about your application.
+Scenario Symfony AI does not invent application-specific APIs or generate incomplete implementations containing TODO placeholders. Instead, it uses the available project information to produce code that is compatible with the existing application.
 
 ## Generating a Parameter Type
 
@@ -117,7 +106,7 @@ php bin/console scenario:ai:make
 
 Enter a request such as:
 
-> Create a Parameter Type that accepts a date of birth and converts it into a DateTimeImmutable instance.
+> Create a Parameter Type that accepts a date of birth.
 
 Scenario Symfony AI uses the Parameter Type blueprint and framework documentation to generate the corresponding PHP class.
 
