@@ -1,6 +1,6 @@
 {
   "name": "stateforge/scenario-symfony-ai",
-  "description": "Symfony adapter for Stateforge Scenario AI - Implementation to generate scenario classes with AI.",
+  "description": "Symfony adapter for Stateforge Scenario AI - AI-assisted generation of Scenarios, Parameter Types, and coding agent skills.",
   "type": "symfony-bundle",
   "keywords": [
     "testing",
@@ -10,7 +10,8 @@
     "state",
     "test-data",
     "symfony",
-    "ai"
+    "ai",
+    "code-generation"
   ],
   "license": "BSD-3-Clause",
   "authors": [
@@ -27,8 +28,8 @@
   },
   "require": {
     "php": ">=8.2",
-    "stateforge/scenario-symfony": "~1.2",
-    "stateforge/scenario-ai": "~1.0-dev"
+    "stateforge/scenario-symfony": "^1.2.3",
+    "stateforge/scenario-ai": "^1.0"
   },
   "autoload": {
     "psr-4": {
@@ -41,7 +42,7 @@
       "Stateforge\\Scenario\\SymfonyAi\\Tests\\Files\\": "tests/files/"
     }
   },
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "prefer-stable": true,
   "config": {
     "sort-packages": true,
@@ -63,7 +64,7 @@
       }
     },
     "branch-alias": {
-      "dev-main": "1.0-dev"
+      "dev-main": "1.1-dev"
     }
   }
 }
